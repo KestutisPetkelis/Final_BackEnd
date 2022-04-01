@@ -3,7 +3,7 @@ const express = require("express")  // serveris
 const app = express()
 const mongoose = require("mongoose") // duomenu baze Mongoose
 const session = require("express-session") // sesijos
-const schedule = require('node-schedule')
+//const schedule = require('node-schedule')
 require('dotenv').config()
 
 app.use(express.json()) ///Butinai reikia isideti, kad pasiimtu duomenis is req.body
