@@ -24,7 +24,28 @@ module.exports ={
         }else {
             next()   
         }
-    }, 
+    },
+    validateAvatar:(req,res, next)=>{
+        const data = req.body
+        
+        console.log(data)
+        if(!data.photo.includes("http")){
+            res.send({success:false,
+                message:"Avatar link does not includes 'http'"
+            })
+
+        }else {
+            next()   
+        }
+    },
+    
+
+
+
+
+
+
+    
     validateAuction:(req,res, next)=>{
         const data =req.body
         // console.log("middleware ", data)

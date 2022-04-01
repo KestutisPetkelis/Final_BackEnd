@@ -74,6 +74,23 @@ module.exports = {
             res.send({message:"All users without active user", allUsers})
         }
     },
+    changeavatar: async (req, res) => {
+        const user = req.session.user
+        const data = req.body
+        console.log ("Avatar", user, data)
+        if(req.session.user){
+            await forumUserModel.findOneAndUpdate({_id:user._id},{photo:data.photo})
+            res.send({success: true, message: "Avatar changed successfully"})
+        } else{
+            res.send({success: false, message: "You can not change avatar for nobody"})
+        }
+        
+    },
+
+
+
+
+
 
     createauction: async (req, res) => {
         const data = req.body

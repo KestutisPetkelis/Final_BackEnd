@@ -3,13 +3,16 @@ const router = express.Router()
 
 const middle = require("../middleware/main")
 
-const {registeruser, loginuser, logout, allusers, createauction,
+const {registeruser, loginuser, logout, allusers,
+      changeavatar, createauction,
     allauctions, getauction, addbid, getuserinfo} =  require("../controllers/main")
 
 router.post("/registeruser", middle.validateData, registeruser)
 router.post("/login",loginuser)
 router.get("/logout", logout)
 router.get("/allusers", allusers)
+router.post("/changeavatar", middle.validateAvatar, changeavatar)
+
 router.post('/createauction', middle.validateAuction, createauction)
 router.get("/allauctions", allauctions)
 router.get("/auction/:id", getauction)
