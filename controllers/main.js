@@ -1,5 +1,5 @@
 const forumUserModel= require("../models/forumUserSchema")
-const auctionModel= require("../models/themaSchema")
+const themaModel= require("../models/themaSchema")
 const bcrypt = require("bcrypt")    // HASH crypto modulis
 
 
@@ -86,43 +86,49 @@ module.exports = {
         }
         
     },
-
-
-
-
-
-
-    createauction: async (req, res) => {
+    createtopic: async (req, res) => {
         const data = req.body
-        console.log(data, req.session.user)
+        const user = req.session.user
+        console.log(data, user)
 
         if(req.session.user){
             console.log("Session user", req.session.user.username)
-            const auction = new auctionModel()
-            auction.username=req.session.user.username
-            auction.image = data.image
-            auction.title = data.title
-            auction.time = Date.now()+data.time
-            auction.startprice = Number(data.price)
-            auction.sellprice= Number(data.price)
-            auction.active = true
-            
-            const newauction = await auction.save()
+            const thema = new themaModel()
+            thema.username=req.session.user.username
+            thema.title = data.title
+            thema.time = Date.now()
+                        
+            // const newauction = await auction.save()
+            const newtopic = await thema.save()
+            return res.send({success:true, message:"Topic has been created successfully ", newtopic })
+        }
+        res.send({success:false, message:"To create new topic you need login first"})
+    },
 
-            return res.send({success:true, message:"Auction has been created successfully ", newauction })
-        }
-        res.send({success:false, message:"To create auction you need login first"})
-    },
-    allauctions: async (req, res) => {
+    alltopics: async (req, res) => {
         const user = req.session.user   
-        //console.log("current user", req.session.user)
-        const allAuctions = await auctionModel.find() 
+        console.log("current user", req.session.user)
+        let allTopics = await themaModel.find()
+        const allUsers = await forumUserModel.find()
+
+        allTopics = allTopics.map(x =>( {
+            _id: x._id,
+            username: x.username,
+            title: x.title,
+            time: x.time,
+            posts: x.posts,
+            photo: allUsers.find(y=> y.username===x.username).photo}))
+            allTopics.reverse()
+        console.log ("new?", allTopics)
         if(req.session.user){
-            res.send({message:"All auctions", allAuctions, user})
+            res.send({message:"All auctions", allTopics, user})
         }else{
-            res.send({message:"All auctions without active user", allAuctions})
+            res.send({message:"All auctions without active user", allTopics})
         }
     },
+
+
+
     getauction: async (req,res) =>{
         const {id} = req.params // perduodam id per paramsus
         const user = req.session.user

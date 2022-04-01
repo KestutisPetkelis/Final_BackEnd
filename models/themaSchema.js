@@ -7,10 +7,6 @@ const themaSchema = new Schema({
         type: String,
         required: true
     },
-    image:{
-        type: String,
-        required: true
-    },
     title:{
         type: String,
         required: true
@@ -24,6 +20,7 @@ const themaSchema = new Schema({
             {
             "username": String,
             "photo": String,
+            "youtubeUrl": String,
             "text": String,
             "time": Number
             }

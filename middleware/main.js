@@ -39,33 +39,21 @@ module.exports ={
         }
     },
     
-
-
-
-
-
-
-    
-    validateAuction:(req,res, next)=>{
+    validateTopic:(req,res, next)=>{
         const data =req.body
-        // console.log("middleware ", data)
-        if(data.title.length<20||data.title.length>500){
+        console.log("middleware ", data)
+        if(data.title.length<6||data.title.length>80){
             res.send({success:false,
-                message:"Title must be between 20-500 symbols length"
+                message:"Title must be between 6-50 symbols length"
             })
-        }else if(!data.image.includes('http')){
-            res.send({success:false,
-                    message:"URL of the picture must include 'http' "
-                })
-        }else if(!Number(data.price)){
-            res.send({success:false,
-            message:"Price must be a number"
-        })
         }else {
             next()
         }
        
     },
+
+
+
     // validatePosts:(req,res,next)=>{
     //     const data =req.body
     //     if(data.title.length<3||data.title.length>20){
