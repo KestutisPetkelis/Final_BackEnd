@@ -118,16 +118,61 @@ module.exports = {
             time: x.time,
             posts: x.posts,
             photo: allUsers.find(y=> y.username===x.username).photo}))
-            allTopics.reverse()
+        allTopics.reverse()
         console.log ("new?", allTopics)
         if(req.session.user){
-            res.send({message:"All auctions", allTopics, user})
+            res.send({message:"All topics", allTopics, user})
         }else{
-            res.send({message:"All auctions without active user", allTopics})
+            res.send({message:"All topics without active user", allTopics})
         }
     },
+    gettopic: async (req,res) =>{
+        const {id} = req.params // perduodam id per paramsus
+        const user = req.session.user
+        console.log ("some ID", id, "some user", user)
+        const singletopic = await themaModel.findOne({_id:id})
+        if(req.session.user){
+            res.send({message: "Single topic", singletopic, user})
+        }else{
+            res.send({message:"Single topic without active user", singletopic})
+        }
+    //     // res.send({message: "single auction", singleauction, user})
+    //    res.send({message: "single topic", singletopic})
+    },
+    createpost: async (req,res) =>{
+        const {id} = req.params // perduodam id per paramsus
+        const user = req.session.user
+        const data = req.body
+        console.log ("some ID", id, "some user", user, "POSTO duomenys", data)
+        if(user){
+            const newpost ={
+                "username": user.username,
+                "photo": data.photo,
+                "youtubeUrl": data.youtubeUrl,
+                "text": data.text,
+                "time": Date.now()
+            }
+            await themaModel.findOneAndUpdate({_id:id}, {$push:{posts:newpost}})
+            res.send({message: "Post has been created successfully"})
+            console.log("POSTAS", newpost)
+        } else {
+            res.send({message:"To create new topic you need login first" })
+        }
+    },
+    getFavoriteTopics: async (req, res) => {
+        const {favoriteArray} = req.body;
+        let topics = await themaModel.find({_id: favoriteArray});
+        const allUsers = await forumUserModel.find()
+        topics = topics.map(x =>( {
+            _id: x._id,
+            username: x.username,
+            title: x.title,
+            time: x.time,
+            posts: x.posts,
+            photo: allUsers.find(y=> y.username===x.username).photo}))
 
-
+        res.send({success: true, getFavoriteTopics: topics});
+    },
 
     getauction: async (req,res) =>{
         const {id} = req.params // perduodam id per paramsus
@@ -137,6 +182,7 @@ module.exports = {
         res.send({message: "single auction", singleauction, user})
        //res.send({message: "single auction"})
     },
+
     addbid: async (req,res) =>{
         const data = req.body
         console.log("pridedam statyma", data)

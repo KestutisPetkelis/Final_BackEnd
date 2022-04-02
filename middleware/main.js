@@ -31,7 +31,7 @@ module.exports ={
         console.log(data)
         if(!data.photo.includes("http")){
             res.send({success:false,
-                message:"Avatar link does not includes 'http'"
+                message:"Avatar link does not include 'http'"
             })
 
         }else {
@@ -51,7 +51,28 @@ module.exports ={
         }
        
     },
+    validatePost:(req,res, next)=>{
+        const data=req.body
+        console.log("middleware ", data)
+        if(data.text.length<10 || data.text.length>250){
+            res.send({success:false,
+                message:"The length of post text is less than 10 or more than 250 characters"
+            })
+        }else if(!data.photo.includes("http") && data.photo.length>0){
+            res.send({success:false,
+                message:"Picture link must include 'http'"
+            })
 
+        }else if(!data.youtubeUrl.includes("youtube") && data.youtubeUrl.length>0){
+            res.send({success:false,
+                message:"Youtube link link must include 'youtube'"
+            })
+
+        }else{
+            next()
+        }
+
+    },
 
 
     // validatePosts:(req,res,next)=>{
