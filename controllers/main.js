@@ -6,10 +6,10 @@ const bcrypt = require("bcrypt")    // HASH crypto modulis
 module.exports = {
     registeruser: async (req, res) => {
         const data = req.body
-        console.log(data)
+        //console.log(data)
         const createCrypto = async(data) =>{
             const hash = await bcrypt.hash(data.password,10)
-            console.log("HASHAS", hash)
+            //console.log("HASHAS", hash)
             const isUser = await  forumUserModel.findOne({username:data.name})
         
             if (!isUser){
@@ -18,13 +18,13 @@ module.exports = {
                 user.createTime = Date.now()
                 user.password = hash
                 user.photo = data.photo
-                console.log(user)
+                //console.log(user)
                 const newUser = await user.save()
-                console.log(newUser)
+                //console.log(newUser)
                 res.send({success:true, message: " User has been registered"})
                 
             }else{
-                console.log("toks jau yra")
+                //console.log("toks jau yra")
                 res.send({success:false, message: " This username allready exists"})
             }
         }
@@ -65,9 +65,9 @@ module.exports = {
     },
     allusers: async (req, res) => {
         const user = req.session.user   
-        console.log("current user", req.session.user)
+        //console.log("current user", req.session.user)
         const allUsers = await forumUserModel.find() 
-        console.log (allUsers)
+        //console.log (allUsers)
         if(req.session.user){
             res.send({message:"All users", allUsers, user})
         }else{
@@ -77,7 +77,7 @@ module.exports = {
     changeavatar: async (req, res) => {
         const user = req.session.user
         const data = req.body
-        console.log ("Avatar", user, data)
+        //console.log ("Avatar", user, data)
         if(req.session.user){
             await forumUserModel.findOneAndUpdate({_id:user._id},{photo:data.photo})
             res.send({success: true, message: "Avatar changed successfully"})
@@ -89,10 +89,10 @@ module.exports = {
     createtopic: async (req, res) => {
         const data = req.body
         const user = req.session.user
-        console.log(data, user)
+        //console.log(data, user)
 
         if(req.session.user){
-            console.log("Session user", req.session.user.username)
+            //console.log("Session user", req.session.user.username)
             const thema = new themaModel()
             thema.username=req.session.user.username
             thema.title = data.title
@@ -107,7 +107,7 @@ module.exports = {
 
     alltopics: async (req, res) => {
         const user = req.session.user   
-        console.log("current user", req.session.user)
+        //console.log("current user", req.session.user)
         let allTopics = await themaModel.find()
         const allUsers = await forumUserModel.find()
 
@@ -119,7 +119,7 @@ module.exports = {
             posts: x.posts,
             photo: allUsers.find(y=> y.username===x.username).photo}))
         allTopics.reverse()
-        console.log ("new?", allTopics)
+        //console.log ("new?", allTopics)
         if(req.session.user){
             res.send({message:"All topics", allTopics, user})
         }else{
@@ -129,7 +129,7 @@ module.exports = {
     gettopic: async (req,res) =>{
         const {id} = req.params // perduodam id per paramsus
         const user = req.session.user
-        console.log ("some ID", id, "some user", user)
+        //console.log ("some ID", id, "some user", user)
         const singletopic = await themaModel.findOne({_id:id})
         if(req.session.user){
             res.send({message: "Single topic", singletopic, user})
@@ -143,7 +143,7 @@ module.exports = {
         const {id} = req.params // perduodam id per paramsus
         const user = req.session.user
         const data = req.body
-        console.log ("some ID", id, "some user", user, "POSTO duomenys", data)
+        //console.log ("some ID", id, "some user", user, "POSTO duomenys", data)
         if(user){
             const newpost ={
                 "username": user.username,
@@ -153,10 +153,11 @@ module.exports = {
                 "time": Date.now()
             }
             await themaModel.findOneAndUpdate({_id:id}, {$push:{posts:newpost}})
-            res.send({message: "Post has been created successfully"})
-            console.log("POSTAS", newpost)
+            const oneTopic = await themaModel.findOne({_id:id}) 
+            res.send({success:true, message: "Post has been created successfully", oneTopic})
+            //console.log("POSTAS", newpost)
         } else {
-            res.send({message:"To create new topic you need login first" })
+            res.send({success:false, message:"To create new topic you need login first" })
         }
     },
     getFavoriteTopics: async (req, res) => {

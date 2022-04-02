@@ -28,7 +28,7 @@ module.exports ={
     validateAvatar:(req,res, next)=>{
         const data = req.body
         
-        console.log(data)
+       // console.log(data)
         if(!data.photo.includes("http")){
             res.send({success:false,
                 message:"Avatar link does not include 'http'"
@@ -41,7 +41,7 @@ module.exports ={
     
     validateTopic:(req,res, next)=>{
         const data =req.body
-        console.log("middleware ", data)
+        //console.log("middleware ", data)
         if(data.title.length<6||data.title.length>80){
             res.send({success:false,
                 message:"Title must be between 6-50 symbols length"
@@ -53,7 +53,7 @@ module.exports ={
     },
     validatePost:(req,res, next)=>{
         const data=req.body
-        console.log("middleware ", data)
+        //console.log("middleware ", data)
         if(data.text.length<10 || data.text.length>250){
             res.send({success:false,
                 message:"The length of post text is less than 10 or more than 250 characters"

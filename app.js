@@ -56,49 +56,17 @@ mongoose.connect(process.env.MONGO_KEY)  // pasiimam is .env failo reiksme
     console.log(e)
 })
 
-// const newUserModel= require("./models/newUserSchema")
-// const auctionModel= require("./models/auctionSchema")
+io.on("connection", socket =>{
+    // console.log("socket connected...", "User connected: "+ socket.id)
+    // console.log ("Now are connecting to server: "+io.engine.clientsCount)
 
-// async function controlBids(){           // **** BID CONTROL MODULE **** //
-//     //const all = await auctionModel.find({time:{ $gte: Date.now() }})
-//     const all = await auctionModel.find({active:true})      // atrenkam aktyvius aukcionus  is bendros DB
-//     //console.log(all.length, all)
-//     const endAuction = all.find(x=>x.time<=Date.now()) // tikrinam aktyvius aukcionus ar nera pasibaiges laikas
-//     if (endAuction) {
-//         if( endAuction.bids.length>0){      // vykdom tuo atveju, jei yra statymu, kitaip tiesiog deaktyvuojam
-//             console.log("endAuction'as.....",endAuction, endAuction.bids[endAuction.bids.length-1].username )
-//             const winner = endAuction.bids[endAuction.bids.length-1].username   // aukciono laimetojas
-//             const currentUser = await newUserModel.findOne({username:winner})
-//             const currentMoney = currentUser.money - endAuction.sellprice
-//             const bidUser= await newUserModel.findOne({username:endAuction.username})   // aukciono kurejo objekto
-//             const plusCurrentMoney = bidUser.money+endAuction.sellprice
-//             if(currentMoney>=0){        // jei laimetojas po keliu aukcionu turi pinigu sumoketi.... kitaip aukciona deaktyvuojam
-//                 await newUserModel.findOneAndUpdate({username:winner},{$set:{"money":currentMoney}}) // is laimetojo atimam pinigu
-//                 await newUserModel.findOneAndUpdate({username:bidUser.username},{$set:{"money":plusCurrentMoney}})  // aukciono kurejui pridedam pinigu
-//             }
-//         }
-//         await auctionModel.findOneAndUpdate({_id:endAuction._id},{$set:{"active":false}}) // pasibaigus laikui aukciona deaktyvuojam
-    
-//     }
-
-// }
-// const thisJob = schedule.scheduleJob('*/1 * * * * *', ()=>{
-    
-//     controlBids()
-    
-// })
-
-// io.on("connection", socket =>{
-//     console.log("socket connected...", "User connected: "+ socket.id)
-//     console.log ("Now are connecting to server: "+io.engine.clientsCount)
-
-//     socket.on("newAuction", message =>{
-//         console.log(message)
-//         io.emit('auctionToAll', message)
-//     })
-//     socket.on("newBid", message =>{
-//         console.log(message)
-//         io.emit('auctionToAll', message)
-//     })
-// })
+    socket.on("newTopic", message =>{
+        //console.log(message)
+        io.emit('infoToAll', message)
+    })
+    socket.on("newPost", message =>{
+        //console.log(message)
+        io.emit('infoToAll', message)
+    })
+})
 
