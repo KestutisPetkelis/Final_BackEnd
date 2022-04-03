@@ -1,15 +1,13 @@
-const express = require("express")  // serveris
+const express = require("express")  
 
 const app = express()
-const mongoose = require("mongoose") // duomenu baze Mongoose
-const session = require("express-session") // sesijos
-//const schedule = require('node-schedule')
+const mongoose = require("mongoose") 
+const session = require("express-session") 
+
 require('dotenv').config()
 
-app.use(express.json()) ///Butinai reikia isideti, kad pasiimtu duomenis is req.body
+app.use(express.json()) 
 
-// const cors = require("cors")
-// app.use(cors())
 const http= require('http').createServer(app)
 
 const io = require('socket.io')(http,{
@@ -17,8 +15,6 @@ const io = require('socket.io')(http,{
         origin: "http://localhost:3000"
     }
 })
-
-//app.listen(4000)   // klausom porto: pvz.: 4000
 
 http.listen(4000, () =>{
     console.log("Listen on port 4000")
@@ -38,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.use(session({
-    secret: process.env.SESSION_SECRET_KEY,    //  pasiimam is .env failo reiksme
+    secret: process.env.SESSION_SECRET_KEY,   
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }
@@ -49,7 +45,7 @@ const { json } = require("express")
 app.use("/", router)
 
 
-mongoose.connect(process.env.MONGO_KEY)  // pasiimam is .env failo reiksme
+mongoose.connect(process.env.MONGO_KEY)  
 .then(res=>{
     console.log("connection good")
 }).catch(e =>{
@@ -61,11 +57,9 @@ io.on("connection", socket =>{
     // console.log ("Now are connecting to server: "+io.engine.clientsCount)
 
     socket.on("newTopic", message =>{
-        //console.log(message)
         io.emit('infoToAll', message)
     })
     socket.on("newPost", message =>{
-        //console.log(message)
         io.emit('infoToAll', message)
     })
 })
