@@ -3,7 +3,7 @@ module.exports ={
     validateData:(req,res, next)=>{
         const data = req.body
         
-        console.log(data)
+        //console.log(data)
         if(data.password.length<3||data.password.length>20){
             res.send({success:false,
                 message:"Wrong password length"
@@ -73,30 +73,5 @@ module.exports ={
         }
 
     },
-
-
-    // validatePosts:(req,res,next)=>{
-    //     const data =req.body
-    //     if(data.title.length<3||data.title.length>20){
-    //         res.send({success:"false",
-    //             message:"Title must be not shorter than 3 and not longer than 20 characters"
-    //         })
-    //     }else if(data.description.length<3||data.description.length>25){
-    //         res.send({success:"false",
-    //                 message:"Description must be not shorter than 3 and not longer than 25 characters"
-    //             })
-    //     }else if(!data.image.includes("http")){
-    //         res.send({success:"false",
-    //                 message:"Image address must include 'http'"
-    //             })
-    //     }else if(data.link.length===0){
-    //         res.send({success:"false",
-    //                 message:"Link can not be empty"
-    //             })
-    //     }else{
-    //         next()   
-    //     }
-
-    // }
 
 }
