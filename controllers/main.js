@@ -1,5 +1,6 @@
 const forumUserModel= require("../models/forumUserSchema")
 const themaModel= require("../models/themaSchema")
+const notificationModel= require("../models/notificationSchema")
 const bcrypt = require("bcrypt")    // HASH crypto modulis
 
 
@@ -153,6 +154,13 @@ module.exports = {
             }
             await themaModel.findOneAndUpdate({_id:id}, {$push:{posts:newpost}})
             const oneTopic = await themaModel.findOne({_id:id}) 
+            const notification = new notificationModel()
+                notification.username= oneTopic.username,
+                notification.title= oneTopic.title,
+                notification.readStatus= false
+                
+            const newNotification = await notification.save()
+            
             res.send({success:true, message: "Post has been created successfully", oneTopic})
             //console.log("POSTAS", newpost)
         } else {
@@ -179,7 +187,7 @@ module.exports = {
         const user = req.session.user
         //console.log ("some ID", user )
         let myPosts = await themaModel.find({'posts.username':user.username})
-        //myPosts = myPosts.map(x=>x.posts.filter(y=>y.username===user.username))
+        
         myPosts = myPosts.map(x =>( {
             _id: x._id,
             username: x.username,
@@ -191,5 +199,24 @@ module.exports = {
         res.send({success: true, message: "myposts", myPosts})
     },
 
+    getnotifications: async (req, res) =>{
+        const user = req.session.user
+        if(user){
+            const activeNotifications = await notificationModel.find({"username": user.username, "readStatus": false})
+            res.send({success: true, message: "get notifications", activeNotifications})
+        } else {
+            res.send({success: false, message: "you are not logged in - no notifications"})
+        }
+    },
+    clearnotifications: async (req, res) =>{
+        const user = req.session.user
+        if(user){
+           
+            const activeNotifications = await notificationModel.updateMany({username: user.username},{readStatus:true})
+            res.send({success: true, message: "clear notifications", activeNotifications})
+        } else {
+            res.send({success: false, message: "you are not logged in - no any notifications"})
+        }
+    },
    
 }

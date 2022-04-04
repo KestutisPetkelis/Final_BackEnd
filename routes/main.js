@@ -5,7 +5,8 @@ const middle = require("../middleware/main")
 
 const {registeruser, loginuser, logout, allusers,
       changeavatar, createtopic, alltopics, gettopic,
-      createpost, getFavoriteTopics, myposts} =  require("../controllers/main")
+      createpost, getFavoriteTopics, myposts, 
+      getnotifications, clearnotifications} =  require("../controllers/main")
 
 router.post("/registeruser", middle.validateData, registeruser)
 router.post("/login",loginuser)
@@ -18,6 +19,7 @@ router.get("/topic/:id", gettopic)
 router.post("/createpost/:id", middle.validatePost, createpost)
 router.post("/getFavoriteTopics",getFavoriteTopics)
 router.get("/myposts", myposts)
-
+router.get("/getnotifications", getnotifications)
+router.get("/clearnotifications", clearnotifications)
 
 module.exports = router
