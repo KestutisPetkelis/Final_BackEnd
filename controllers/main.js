@@ -130,13 +130,13 @@ module.exports = {
         const user = req.session.user
         //console.log ("some ID", id, "some user", user)
         const singletopic = await themaModel.findOne({_id:id})
+        
         if(req.session.user){
             res.send({message: "Single topic", singletopic, user})
         }else{
             res.send({message:"Single topic without active user", singletopic})
         }
-    //     // res.send({message: "single auction", singleauction, user})
-    //    res.send({message: "single topic", singletopic})
+    
     },
     createpost: async (req,res) =>{
         const {id} = req.params // perduodam id per paramsus
